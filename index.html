@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MSI Logistics - Sistema de Gestión Operativa</title>
+    
+    <!-- Favicon con icono.png -->
+    <link rel="icon" type="image/png" href="icono.png">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- AG Grid Community CSS & JS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ag-grid-community@31.0.0/styles/ag-grid.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ag-grid-community@31.0.0/styles/ag-theme-alpine.css">
+    <script src="https://cdn.jsdelivr.net/npm/ag-grid-community@31.0.0/dist/ag-grid-community.min.js"></script>
+
+    <!-- Estilos Corporativos MSI Red -->
+    <link rel="stylesheet" href="web_app/static/css/styles.css">
+</head>
+<body>
+
+    <!-- Left Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <img src="icono.png" alt="MSI Logo" class="sidebar-logo-img">
+            <div class="sidebar-title-area">
+                <h1>MSI LOGISTICS</h1>
+                <span>Sistema Operativo</span>
+            </div>
+        </div>
+
+        <nav class="nav-container" id="navTree">
+            <!-- Dynamic 3-level menu rendered by JS -->
+        </nav>
+
+        <div class="sidebar-footer">
+            <span>COPYRIGHT MSI &copy;2026</span>
+            <div class="sync-status">
+                <i class="fa-solid fa-shield-halved"></i> Live Cloud
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+        <header class="topbar">
+            <div class="topbar-left">
+                <img src="icono.png" alt="MSI Logo" class="topbar-brand-logo">
+                <div>
+                    <h2 class="page-title" id="currentTitle">Inicio</h2>
+                    <div class="breadcrumb" id="currentBreadcrumb">Inicio</div>
+                </div>
+            </div>
+
+            <div class="topbar-right">
+                <div class="search-box">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="text" class="search-input" id="globalSearchInput" placeholder="Buscar en la tabla..." oninput="onSearchInput(this.value)">
+                </div>
+
+                <button class="btn btn-outline" onclick="refreshCurrentSheet()">
+                    <i class="fa-solid fa-rotate-right"></i> Refrescar
+                </button>
+
+                <button class="btn btn-primary" onclick="openNewRecordModal()">
+                    <i class="fa-solid fa-plus"></i> Nuevo Registro
+                </button>
+            </div>
+        </header>
+
+        <div class="content-body">
+            <!-- Dashboard View -->
+            <div class="dashboard-view active" id="dashboardView">
+                <div class="welcome-banner">
+                    <div class="welcome-banner-text">
+                        <h2>Bienvenido al Sistema de Gestión MSI Logistics</h2>
+                        <p>Plataforma web integrada para el control operativo, seguimiento de embarques, despacho de aduanas y gestión de proveedores en tiempo real.</p>
+                    </div>
+                    <img src="icono.png" alt="MSI Badge" class="welcome-logo-badge">
+                </div>
+
+                <div class="stats-grid" id="statsGrid">
+                    <!-- Stat cards -->
+                </div>
+            </div>
+
+            <!-- AG Grid View -->
+            <div class="grid-view" id="gridView">
+                <div class="grid-toolbar">
+                    <div style="font-size: 13px; color: var(--text-muted);">
+                        <i class="fa-solid fa-pen-to-square" style="color: var(--brand-primary); margin-right: 4px;"></i>
+                        Edición Directa en Celda Habilitada. Haz doble clic en cualquier celda para modificar en tiempo real.
+                    </div>
+                    <div id="gridRowCounter" style="font-size: 13px; font-weight: 700;">
+                        Cargando...
+                    </div>
+                </div>
+
+                <div class="grid-container-wrapper">
+                    <div id="myGrid" class="ag-theme-alpine"></div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal Form (Nuevo Registro) -->
+    <div class="modal-overlay" id="recordModal">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3 id="modalTitle">Nuevo Registro</h3>
+                <button class="modal-close" onclick="closeRecordModal()"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                <form id="modalForm">
+                    <div class="form-grid" id="modalFormFields">
+                        <!-- Dynamic fields -->
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeRecordModal()">Cancelar</button>
+                <button class="btn btn-primary" onclick="submitModalForm()">Guardar Registro</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Application JS -->
+    <script src="web_app/static/js/app.js"></script>
+</body>
+</html>
