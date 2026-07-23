@@ -1,279 +1,135 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>WhatsApp Enterprise CRM | Estilo Kommo & Zoho</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-  <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css">
-  <style>
-    .view-panel { display: none !important; width: 100%; height: 100%; }
-    .view-panel.active-view { display: flex !important; }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MSI Logistics - Sistema de Gestión Operativa</title>
+    
+    <!-- Favicon con icono.png -->
+    <link rel="icon" type="image/png" href="icono.png">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- AG Grid Community CSS & JS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ag-grid-community@31.0.0/styles/ag-grid.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ag-grid-community@31.0.0/styles/ag-theme-alpine.css">
+    <script src="https://cdn.jsdelivr.net/npm/ag-grid-community@31.0.0/dist/ag-grid-community.min.js"></script>
+
+    <!-- Estilos Corporativos MSI Red -->
+    <link rel="stylesheet" href="web_app/static/css/styles.css">
 </head>
 <body>
 
-<div class="app-container">
-  <!-- Barra de Navegación Lateral (SOLO 2 PESTAÑAS PRINCIPALES: CHATS Y KANBAN) -->
-  <nav class="main-nav">
-    <div class="nav-brand" title="WhatsApp CRM Enterprise">
-      <i class="ri-whatsapp-line"></i>
-    </div>
-    <div class="nav-menu">
-      <div class="nav-item active" data-view="inboxView" title="Bandeja de Chats (Inbox)">
-        <i class="ri-chat-3-line"></i>
-      </div>
-      <div class="nav-item" data-view="kanbanView" title="Embudo Kanban (Kommo)">
-        <i class="ri-kanban-view"></i>
-      </div>
-    </div>
-    <div class="nav-footer">
-      <div class="nav-item" id="soundToggleBtn" title="Notificación Sonora Activada" onclick="toggleSound()">
-        <i class="ri-volume-up-line" style="color:var(--wa-green)"></i>
-      </div>
-      <div class="nav-item" title="Bloquear CRM" onclick="lockPanel()" style="color:var(--accent-red)">
-        <i class="ri-lock-line"></i>
-      </div>
-    </div>
-  </nav>
-
-  <!-- Área Principal de Trabajo -->
-  <main class="workspace-area">
-
-    <!-- ====================================================================
-         VISTA 1: CHAT INBOX EN VIVO (Estilo WhatsApp Web)
-         ==================================================================== -->
-    <section class="view-panel inbox-view active-view" id="inboxView">
-      <!-- Lista de Chats -->
-      <aside class="chat-sidebar">
+    <!-- Left Sidebar -->
+    <aside class="sidebar" id="sidebar">
         <div class="sidebar-header">
-          <h2><i class="ri-chat-smile-2-line" style="color:var(--wa-green)"></i> Conversaciones</h2>
-          <div class="hdr-actions">
-            <i class="ri-refresh-line" title="Actualizar Datos" onclick="loadChats()"></i>
-          </div>
-        </div>
-        <div class="search-bar">
-          <div class="search-input-wrap">
-            <i class="ri-search-line"></i>
-            <input type="text" id="searchInput" placeholder="Buscar por nombre o teléfono..." oninput="renderChatList()">
-          </div>
-        </div>
-        <div class="chats-scroll-list" id="chatsListContainer"></div>
-      </aside>
-
-      <!-- Panel de Chat Activo -->
-      <section class="chat-main">
-        <!-- Header del Chat Seleccionado -->
-        <div class="chat-main-header" id="chatHeader" style="display:none">
-          <div class="active-user-meta">
-            <div class="avatar" id="activeHdrAvatar">MSI</div>
-            <div>
-              <h3 id="activeHdrName" style="font-size:0.98rem;">—</h3>
-              <div class="user-status-text">
-                <span>● Línea WhatsApp Cloud API Activa</span> • <span id="activeHdrPhone">+51 000 000 000</span>
-              </div>
+            <img src="icono.png" alt="MSI Logo" class="sidebar-logo-img">
+            <div class="sidebar-title-area">
+                <h1>MSI LOGISTICS</h1>
+                <span>Sistema Operativo</span>
             </div>
-          </div>
         </div>
 
-        <!-- Estado Vacío -->
-        <div class="empty-state" id="inboxEmptyState" style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--text-muted);gap:12px;">
-          <i class="ri-whatsapp-line" style="font-size:4.5rem;opacity:0.3;"></i>
-          <p style="font-size:0.95rem;text-align:center;max-width:340px;line-height:1.5;">
-            <strong>WhatsApp Enterprise CRM</strong><br>Selecciona un chat en la lista izquierda para iniciar la atención en vivo.
-          </p>
-        </div>
+        <nav class="nav-container" id="navTree">
+            <!-- Dynamic 3-level menu rendered by JS -->
+        </nav>
 
-        <!-- Área de Mensajes -->
-        <div class="messages-viewport" id="messagesViewport" style="display:none"></div>
-
-        <!-- Botón Flotante para Salto al Final -->
-        <div class="scroll-bottom-btn" id="scrollBottomBtn" style="display:none" onclick="forceScrollBottom()">
-          <i class="ri-arrow-down-line"></i>
-        </div>
-
-        <!-- Barra de Composición de Respuesta con Adjuntos & Emojis -->
-        <div class="compose-bar" id="composeBar" style="display:none">
-          <i class="ri-emotion-happy-line compose-icon" title="Insertar Emojis" onclick="toggleEmojiPicker()"></i>
-          <i class="ri-attachment-2 compose-icon" title="Enviar Imagen o Documento" onclick="openAttachModal()"></i>
-          <div class="compose-input-wrap">
-            <input type="text" id="messageReplyInput" placeholder="Escribe una respuesta en vivo..." onkeypress="if(event.key==='Enter')sendTextMessage()">
-          </div>
-          <button class="send-btn" onclick="sendTextMessage()"><i class="ri-send-plane-2-fill"></i></button>
-
-          <!-- Emoji Picker Popover -->
-          <div class="emoji-picker-popover" id="emojiPicker">
-            <div class="emoji-grid" id="emojiGrid"></div>
-          </div>
-        </div>
-      </section>
-
-      <!-- Panel Derecha: Ficha 360° del Cliente (Zoho CRM Style) -->
-      <aside class="lead-detail-panel" id="leadDetailPanel">
-        <div class="profile-card">
-          <div class="profile-avatar" id="detailAvatar">MSI</div>
-          <h3 id="detailName">Selecciona un Lead</h3>
-          <p id="detailPhone">—</p>
-        </div>
-
-        <div style="display:flex;flex-direction:column;gap:6px;">
-          <div class="crm-section-title">Etapa del Embudo Comercial</div>
-          <select class="pipeline-selector" id="pipelineStageSelect" onchange="updateClientStageFromDetail(this.value)">
-            <option value="Nuevo Lead">🔵 1. Nuevo Lead</option>
-            <option value="En Contacto">🟡 2. En Contacto</option>
-            <option value="Encuesta Enviada">📋 3. Encuesta Enviada</option>
-            <option value="Cotización">🟣 4. Cotización / Propuesta</option>
-            <option value="Cliente Ganado">🟢 5. Cliente Ganado ✅</option>
-            <option value="Cliente Perdido">🔴 6. Cliente Perdido ❌</option>
-          </select>
-        </div>
-
-        <!-- Métricas de Encuestas Reemplazando el Valor Monetario -->
-        <div style="display:flex;flex-direction:column;gap:6px;">
-          <div class="crm-section-title">Métricas de Atención</div>
-          <div class="crm-card">
-            <div class="field-row"><span class="lbl">Encuestas Enviadas:</span><span class="val" id="detailSurveysSent" style="color:var(--wa-green);">0</span></div>
-            <div class="field-row"><span class="lbl">Encuestas Respondidas:</span><span class="val" id="detailSurveysAnswered" style="color:#34d399;">0</span></div>
-            <div class="field-row"><span class="lbl">Empresa:</span><span class="val" id="detailCompany">MSI ADUANAS</span></div>
-            <div class="field-row"><span class="lbl">Ejecutivo:</span><span class="val" id="detailAgent">Jade Vega</span></div>
-          </div>
-        </div>
-
-        <div style="display:flex;flex-direction:column;gap:6px;" id="detailSurveySection">
-          <div class="crm-section-title">Última Encuesta CSAT</div>
-          <div class="crm-card" id="detailSurveyCard">
-            <p style="font-size:0.8rem;color:var(--text-muted);">Sin respuestas registradas.</p>
-          </div>
-        </div>
-      </aside>
-    </section>
-
-
-    <!-- ====================================================================
-         VISTA 2: EMBUDO KANBAN (Estilo Kommo CRM - PANTALLA COMPLETA)
-         ==================================================================== -->
-    <section class="view-panel kanban-view" id="kanbanView">
-      <div class="kanban-header">
-        <h2><i class="ri-kanban-view" style="color:var(--wa-green)"></i> Embudo de Ventas & Oportunidades (Kommo CRM)</h2>
-        <button style="background:var(--wa-green);color:var(--bg-deep);border:none;padding:10px 18px;border-radius:8px;font-weight:700;cursor:pointer;" onclick="loadChats()">
-          <i class="ri-refresh-line"></i> Sincronizar Embudo
-        </button>
-      </div>
-
-      <div class="kanban-board">
-        <!-- Columna 1 -->
-        <div class="kanban-column" data-stage="Nuevo Lead">
-          <div class="column-header">
-            <div class="column-title-wrap">
-              <span class="status-dot" style="background:var(--accent-blue);"></span>
-              <span class="column-title">1. Nuevos Leads</span>
+        <div class="sidebar-footer">
+            <span>COPYRIGHT MSI &copy;2026</span>
+            <div class="sync-status">
+                <i class="fa-solid fa-shield-halved"></i> Live Cloud
             </div>
-            <span class="lead-count-badge" id="count-Nuevo Lead">0</span>
-          </div>
-          <div class="cards-container" id="cards-Nuevo Lead" ondragover="handleDragOver(event)" ondrop="handleDrop(event, 'Nuevo Lead')"></div>
         </div>
+    </aside>
 
-        <!-- Columna 2 -->
-        <div class="kanban-column" data-stage="En Contacto">
-          <div class="column-header">
-            <div class="column-title-wrap">
-              <span class="status-dot" style="background:var(--accent-amber);"></span>
-              <span class="column-title">2. En Contacto</span>
+    <!-- Main Content Area -->
+    <main class="main-content">
+        <header class="topbar">
+            <div class="topbar-left">
+                <img src="icono.png" alt="MSI Logo" class="topbar-brand-logo">
+                <div>
+                    <h2 class="page-title" id="currentTitle">Inicio</h2>
+                    <div class="breadcrumb" id="currentBreadcrumb">Inicio</div>
+                </div>
             </div>
-            <span class="lead-count-badge" id="count-En Contacto">0</span>
-          </div>
-          <div class="cards-container" id="cards-En Contacto" ondragover="handleDragOver(event)" ondrop="handleDrop(event, 'En Contacto')"></div>
-        </div>
 
-        <!-- Columna 3 -->
-        <div class="kanban-column" data-stage="Encuesta Enviada">
-          <div class="column-header">
-            <div class="column-title-wrap">
-              <span class="status-dot" style="background:var(--accent-purple);"></span>
-              <span class="column-title">3. Encuesta Enviada</span>
+            <div class="topbar-right">
+                <div class="search-box">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="text" class="search-input" id="globalSearchInput" placeholder="Buscar en la tabla..." oninput="onSearchInput(this.value)">
+                </div>
+
+                <button class="btn btn-outline" onclick="refreshCurrentSheet()">
+                    <i class="fa-solid fa-rotate-right"></i> Refrescar
+                </button>
+
+                <button class="btn btn-primary" onclick="openNewRecordModal()">
+                    <i class="fa-solid fa-plus"></i> Nuevo Registro
+                </button>
             </div>
-            <span class="lead-count-badge" id="count-Encuesta Enviada">0</span>
-          </div>
-          <div class="cards-container" id="cards-Encuesta Enviada" ondragover="handleDragOver(event)" ondrop="handleDrop(event, 'Encuesta Enviada')"></div>
-        </div>
+        </header>
 
-        <!-- Columna 4 -->
-        <div class="kanban-column" data-stage="Cotización">
-          <div class="column-header">
-            <div class="column-title-wrap">
-              <span class="status-dot" style="background:#06b6d4;"></span>
-              <span class="column-title">4. Cotización</span>
+        <div class="content-body">
+            <!-- Dashboard View -->
+            <div class="dashboard-view active" id="dashboardView">
+                <div class="welcome-banner">
+                    <div class="welcome-banner-text">
+                        <h2>Bienvenido al Sistema de Gestión MSI Logistics</h2>
+                        <p>Plataforma web integrada para el control operativo, seguimiento de embarques, despacho de aduanas y gestión de proveedores en tiempo real.</p>
+                    </div>
+                    <img src="icono.png" alt="MSI Badge" class="welcome-logo-badge">
+                </div>
+
+                <div class="stats-grid" id="statsGrid">
+                    <!-- Stat cards -->
+                </div>
             </div>
-            <span class="lead-count-badge" id="count-Cotización">0</span>
-          </div>
-          <div class="cards-container" id="cards-Cotización" ondragover="handleDragOver(event)" ondrop="handleDrop(event, 'Cotización')"></div>
-        </div>
 
-        <!-- Columna 5 -->
-        <div class="kanban-column" data-stage="Cliente Ganado">
-          <div class="column-header">
-            <div class="column-title-wrap">
-              <span class="status-dot" style="background:var(--accent-emerald);"></span>
-              <span class="column-title">5. Ganados ✅</span>
+            <!-- AG Grid View -->
+            <div class="grid-view" id="gridView">
+                <div class="grid-toolbar">
+                    <div style="font-size: 13px; color: var(--text-muted);">
+                        <i class="fa-solid fa-pen-to-square" style="color: var(--brand-primary); margin-right: 4px;"></i>
+                        Edición Directa en Celda Habilitada. Haz doble clic en cualquier celda para modificar en tiempo real.
+                    </div>
+                    <div id="gridRowCounter" style="font-size: 13px; font-weight: 700;">
+                        Cargando...
+                    </div>
+                </div>
+
+                <div class="grid-container-wrapper">
+                    <div id="myGrid" class="ag-theme-alpine"></div>
+                </div>
             </div>
-            <span class="lead-count-badge" id="count-Cliente Ganado">0</span>
-          </div>
-          <div class="cards-container" id="cards-Cliente Ganado" ondragover="handleDragOver(event)" ondrop="handleDrop(event, 'Cliente Ganado')"></div>
         </div>
+    </main>
 
-        <!-- Columna 6 -->
-        <div class="kanban-column" data-stage="Cliente Perdido">
-          <div class="column-header">
-            <div class="column-title-wrap">
-              <span class="status-dot" style="background:var(--accent-red);"></span>
-              <span class="column-title">6. Perdidos ❌</span>
+    <!-- Modal Form (Nuevo Registro) -->
+    <div class="modal-overlay" id="recordModal">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3 id="modalTitle">Nuevo Registro</h3>
+                <button class="modal-close" onclick="closeRecordModal()"><i class="fa-solid fa-xmark"></i></button>
             </div>
-            <span class="lead-count-badge" id="count-Cliente Perdido">0</span>
-          </div>
-          <div class="cards-container" id="cards-Cliente Perdido" ondragover="handleDragOver(event)" ondrop="handleDrop(event, 'Cliente Perdido')"></div>
+            <div class="modal-body">
+                <form id="modalForm">
+                    <div class="form-grid" id="modalFormFields">
+                        <!-- Dynamic fields -->
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeRecordModal()">Cancelar</button>
+                <button class="btn btn-primary" onclick="submitModalForm()">Guardar Registro</button>
+            </div>
         </div>
-      </div>
-    </section>
+    </header>
 
-  </main>
-</div>
-
-<!-- Modal para Adjuntar Imágenes y Documentos -->
-<div class="modal-overlay" id="attachModal">
-  <div class="modal-box">
-    <h3 style="font-size:1.1rem;display:flex;align-items:center;gap:8px;"><i class="ri-attachment-2" style="color:var(--wa-green);"></i> Enviar Archivo o Imagen por WhatsApp</h3>
-    <div class="dropzone" id="dropzone" onclick="document.getElementById('fileInput').click()">
-      <i class="ri-upload-cloud-2-line"></i>
-      <p style="font-size:0.9rem;margin-bottom:4px;"><strong>Haz clic aquí</strong> para seleccionar o arrastra un archivo</p>
-      <div style="font-size:0.75rem;color:var(--text-muted)">Imágenes (JPG, PNG), PDF, Word, Excel (máx 16 MB)</div>
-    </div>
-    <input type="file" id="fileInput" accept=".pdf,.doc,.docx,.xls,.xlsx,.png,.jpg,.jpeg,.gif,.webp" style="display:none" onchange="handleFileSelect(this)">
-    
-    <div id="fileSelectedInfo" style="display:none;background:var(--bg-header);padding:10px 14px;border-radius:8px;font-size:0.85rem;color:#34d399;font-weight:600;display:flex;align-items:center;gap:8px;">
-      <i class="ri-file-check-line" style="font-size:1.2rem;"></i> <span id="selectedFileName">archivo.pdf</span>
-    </div>
-
-    <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:10px;">
-      <button style="background:rgba(255,255,255,0.08);color:var(--text-main);border:none;padding:9px 16px;border-radius:8px;cursor:pointer;" onclick="closeAttachModal()">Cancelar</button>
-      <button style="background:var(--wa-green);color:var(--bg-deep);border:none;padding:9px 18px;border-radius:8px;font-weight:700;cursor:pointer;" id="btnSendFile" onclick="sendFileAttachment()" disabled><i class="ri-send-plane-fill"></i> Enviar Archivo</button>
-    </div>
-  </div>
-</div>
-
-<!-- Pantalla de Seguridad PIN -->
-<div class="auth-modal-overlay" id="authOverlay">
-  <div class="auth-modal-card">
-    <div class="auth-logo"><i class="ri-shield-keyhole-line"></i></div>
-    <h2>Acceso Restringido</h2>
-    <p>Introduce la clave corporativa de seguridad para ingresar al CRM de MSI ADUANAS.</p>
-    <input type="password" class="auth-input" id="authPinInput" placeholder="Clave de Seguridad" onkeypress="if(event.key==='Enter')submitAuthPin()">
-    <button class="auth-btn" onclick="submitAuthPin()"><i class="ri-lock-unlock-line"></i> Ingresar al Panel</button>
-    <div id="authError" style="color:var(--accent-red);font-size:0.78rem;margin-top:10px;display:none;">Clave incorrecta. Inténtalo nuevamente.</div>
-  </div>
-  <!-- Lógica Principal con Cache-Busting -->
-  <script src="app.js?v=20260723"></script>
+    <!-- Main Application JS -->
+    <script src="web_app/static/js/app.js"></script>
 </body>
 </html>
